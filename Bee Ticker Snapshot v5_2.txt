@@ -1,0 +1,54 @@
+---
+
+Bee Ticker Project Snapshot
+Version: v5.2-stable
+Date: 2025-05-13
+Developer: Usher + Assistant
+----------------------------
+
+✅ PROJECT STATE
+Bee Ticker v5.2 is fully working and stable.
+This is the official v5.2 snapshot after resolving all known exceptions.
+
+✅ FILE STRUCTURE
+/bee\_ticker\_v5\_0/
+├── main.py              → Main entry point, builds window, sets style
+├── gui.py               → GUI logic: article feed + weather + theme toggle
+├── feeds.py             → Fetches news articles from defined sources
+├── weather.py           → Fetches live weather from OpenWeatherMap
+├── storage.py           → Handles saving + loading saved articles (JSON)
+├── themes.py            → Light/dark theme switch helpers
+├── utils.py             → Utilities (format\_time, etc.)
+├── config.json          → Contains OpenWeather API key
+├── saved\_articles.json  → Persistent saved articles file
+├── .gitignore           → Git exclusions
+├── README.md            → (optional placeholder)
+
+✅ FEATURES COMPLETE
+
+* Live news ticker with scroll + clickable article links
+* Persistent article saving/removal with star button
+* Live weather integration (OpenWeather API + icon)
+* Weather auto-refreshes every 10 min
+* Theme toggle button with light/dark styles
+* Robust exception handling (no NoneType / format\_time errors)
+
+✅ STABLE STATUS
+All features run clean with no known exceptions.
+This is the last known good build of Bee Ticker prior to v5.3 planning.
+
+---
+
+## NOTES FOR v5.3 IDEAS
+
+1. Add weather city input (user-customizable location)
+2. Add multiple RSS feed source manager
+3. Export saved articles to file
+4. Add optional notifications for new articles or keywords
+5. Enhance dark mode styling + fonts
+6. Consider auto-retry for failed weather fetches
+7. (Optional) Package as standalone .exe using PyInstaller
+
+---
+
+## END OF SNAPSHOT DOCUMENT FOR v5.2-STABLE
