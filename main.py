@@ -1,26 +1,16 @@
-# main.py - Bee Ticker v5.1 main entry point
+# main.py - Bee Ticker v5.4 master launcher
 
-import tkinter as tk
-from datetime import datetime
-from feeds import get_articles
-from storage import load_saved_articles
-from themes import apply_light_mode, apply_dark_mode
-from gui import build_gui
-from utils import format_time
+from app_shell import BeeTickerApp
+from feeds import create_feed_frame
 
 def main():
-    window = tk.Tk()
-    window.title("Bee News Ticker v5.1")
-    window.geometry("320x600")
-    window.minsize(220, 400)
+    app = BeeTickerApp()
 
-    style = tk.ttk.Style()
-    style.configure("TButton", padding=6, relief="flat", background="#ccc")
+    # Attach feeds module into content area
+    feed_frame = create_feed_frame(app)
+    app.attach_content(feed_frame)
 
-    saved_articles = load_saved_articles() or []
-    build_gui(window, saved_articles)
-
-    window.mainloop()
+    app.mainloop()
 
 if __name__ == "__main__":
     main()

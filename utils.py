@@ -1,7 +1,11 @@
-# utils.py - Bee Ticker v5.0 module
+# utils.py - Bee Ticker v5.4 master module
 
-def format_time(dt_obj):
-    """Returns a formatted datetime string for display."""
-    return dt_obj.strftime("Last update: %Y-%m-%d %H:%M:%S")
+from datetime import datetime
 
-
+def format_time(time_string):
+    """Format RSS published time string into MM/DD format."""
+    try:
+        dt = datetime.strptime(time_string, "%a, %d %b %Y %H:%M:%S %z")
+        return dt.strftime("%m/%d")
+    except Exception:
+        return ""
