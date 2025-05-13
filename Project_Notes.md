@@ -5,43 +5,45 @@ Modular beekeeping news + weather desktop app
 Python + tkinter + ttk + feedparser + OpenWeatherMap API
 
 ## Current Version
-**v5.3**  
+**v5.4**  
 Date: 2025-05-13  
-Status: Stable working modular build
+Status: Shell + feeds working (needs visual cleanup)
 
 ## Folder Structure
-bee_ticker
-├── main.py → App launcher + controller
-├── gui.py → GUI logic + window creation
-├── feeds.py → RSS news pulling (Google News, Bee Culture, ABJ)
-├── weather.py → Live weather API fetch (OpenWeather)
-├── storage.py → Persistent saved articles system (JSON file)
-├── themes.py → Light/Dark mode style functions
-├── utils.py → Utilities (format_time etc.)
-├── config.json → OpenWeather API key storage
-├── saved_articles.json → Saved articles (persistent data)
-├── .git/ (if repo started)
-├── .vscode/ (VS Code stability settings)
-
+bee_ticker_v5_0/
+├── app_shell.py → BeeTickerApp window shell
+├── main.py → launcher only
+├── feeds.py → scrollable news headlines (attached)
+├── weather.py → (pending reconnect)
+├── storage.py → saved article persistence
+├── themes.py → (currently shelved)
+├── utils.py → helper functions (format_time)
+├── config.json → externalized API key storage
+├── saved_articles.json → persistent saved articles
+├── .git/ → local Git repository fully initialized
+├── .vscode/ → VS Code local virtual environment stability settings
 
 ## Current Features
 - Modular architecture complete
-- Fully functional GUI (tkinter + ttk)
-- News ticker with multiple feed sources
-- Persistent “Save for Later” star toggle system
-- Light/Dark theme toggle (ttk style based)
-- Mouse wheel scrolling support
-- Live weather display + weather icon
-- Packaged to standalone .exe with pyinstaller (local test)
+- App runs via BeeTickerApp shell class
+- Fully functional news feed pull + display
+- Clickable article links open in browser
+- Project structured for clean module attachments
 
 ## Known Stable Milestones
 - v5.0 → Single file → full modular conversion
 - v5.1 → Weather API externalized to config.json
 - v5.2 → Weather + news integrated GUI
-- v5.3 → Canvas + ttk hybrid GUI, dark mode fixed, persistent saved_articles system finalized
+- v5.3 → Canvas + ttk hybrid GUI, persistent saved_articles system finalized
+- v5.4 → Shell refactor milestone + feeds module attached
+    - App refactored into BeeTickerApp shell class
+    - main.py converted to launcher only
+    - feeds module fully rewired into shell (create_feed_frame)
+    - news headlines display working with live data pull
+    - star toggle, scroll area, and visual layout remain incomplete for next phase
 
 ## Next Planned Work (future versions)
-- v5.4 → Add weather city input (user location)
+- v5.4.1 → Feeds polish (scroll fix, star button restore, remove placeholder labels)
 - v5.5 → Add editable multi-RSS feed manager
 - v5.6 → Add saved article export feature
 - v5.7 → Add notification alerts for keyword matches
@@ -49,8 +51,6 @@ bee_ticker
 - v6.0 → Consider plugin-based modular expansion (if app grows much larger)
 
 ## Notes
-This project is now fully structured and safe to scale.  
-This file acts as the primary "resync document" if chat is lost or development is resumed later.  
-Assistant understands project state as of v5.3 snapshot.
-
-
+This project is fully structured and safe to continue scaling.  
+This file remains the primary "resync document" for project continuation.  
+Assistant understands project state as of v5.4 snapshot (shell + feeds working).
