@@ -12,6 +12,10 @@ def load_saved_articles():
         with open(SAVE_FILE, "r") as f:
             saved_articles = json.load(f)
 
+    else:
+        saved_articles = []
+    return saved_articles
+
 def save_articles():
     with open(SAVE_FILE, "w") as f:
         json.dump(saved_articles, f)

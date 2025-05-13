@@ -1,15 +1,23 @@
-# weather.py - Bee Ticker v5.1 module
+# weather.py - Bee Ticker v5.1 module with config file
 
 import requests
+import json
+import os
 
-API_KEY = "ac6379682e40ee7caec07c8112871aee"  
+def load_api_key():
+    config_path = os.path.join(os.path.dirname(__file__), "config.json")
+    with open(config_path, "r") as f:
+        config = json.load(f)
+    return config["OPENWEATHER_API_KEY"]
+
+API_KEY = load_api_key()
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 
 def get_current_weather(city):
     params = {
         "q": city,
         "appid": API_KEY,
-        "units": "imperial"  
+        "units": "imperial"
     }
     response = requests.get(BASE_URL, params=params)
     if response.status_code == 200:

@@ -1,67 +1,210 @@
-# gui.py - Bee Ticker v5.0 module
+# gui.py – Bee Ticker v5.2 with live weather integration
 
 import tkinter as tk
 from tkinter import ttk
-import webbrowser
-from storage import is_saved, toggle_save
+import requests
+import io
+from PIL import Image, ImageTk
 
-def build_gui(window, style, get_articles_func, saved_articles):
-    view_saved = [False]
+from feeds import get_articles
+from storage import load_saved_articles, save_articles
+from themes import apply_light_mode, apply_dark_mode
+from utils import format_time
+from weather import get_current_weather
 
-    dark_button = ttk.Button(window, text="Toggle Dark Mode")
-    dark_button.pack(pady=(5, 0))
+def build_gui(window, saved_articles):
+    # ─── Theme & Colors ────────────────────────────────────────────
+    current_colors = {
+        "bg": "white",
+        "fg": "black",
+        "link": "blue",
+        "button_bg": "white"
+    }
+    window.title("Bee Ticker")
+    window.configure(bg=current_colors["bg"])
 
-    view_button = ttk.Button(window, text="View Saved Articles")
-    view_button.pack(pady=(0, 5))
+    # ─── Theme Toggle ───────────────────────────────────────────────
+    def toggle_theme():
+        if current_colors["bg"] == "white":
+            apply_dark_mode(window, current_colors)
+        else:
+            apply_light_mode(window, current_colors)
 
-    time_label = ttk.Label(window, text="Last update: --")
-    time_label.pack(pady=(5, 5))
+    # ─── Article Refresh ────────────────────────────────────────────
+    def refresh_articles():
+        # clear existing
+        for widget in news_frame.winfo_children():
+            widget.destroy()
 
-    canvas = tk.Canvas(window, highlightthickness=0)
-    scrollbar = ttk.Scrollbar(window, orient="vertical", command=canvas.yview)
-    scroll_frame = ttk.Frame(canvas)
+        # fetch & display
+        articles = get_articles()
+        for title, link, source in articles:
+            row = tk.Frame(news_frame, bg=current_colors["bg"])
+            row.pack(fill="x", padx=8, pady=(6, 2))
 
-    scroll_frame.bind(
+            link_label = tk.Label(
+                row,
+                text="- " + title,
+                fg=current_colors["link"],
+                bg=current_colors["bg"],
+                cursor="hand2",
+                wraplength=250,
+                justify="left",
+                font=("Arial", 10, "bold")
+            )
+            link_label.bind(
+                "<Button-1>",
+                lambda e, url=link: __import__("webbrowser").open(url)
+            )
+            link_label.pack(side="left", fill="x", expand=True)
+
+            is_saved = (title, link, source) in saved_articles
+            star_text = "★" if is_saved else "☆"
+            def toggle_save(t=title, l=link, s=source, btn=None):
+                if (t, l, s) in saved_articles:
+                    saved_articles.remove((t, l, s))
+                    btn.config(text="☆")
+                else:
+                    saved_articles.append((t, l, s))
+                    btn.config(text="★")
+                save_articles(saved_articles)
+
+            star_btn = tk.Button(
+                row,
+                text=star_text,
+                command=lambda t=title, l=link, s=source: toggle_save(t, l, s, star_btn),
+                bg=current_colors["button_bg"],
+                fg=current_colors["fg"],
+                borderwidth=0
+            )
+            star_btn.pack(side="right")
+
+            source_label = tk.Label(
+                news_frame,
+                text=f"({source})",
+                fg=current_colors["fg"],
+                bg=current_colors["bg"],
+                font=("Arial", 8, "italic")
+            )
+            source_label.pack(anchor="w", padx=25)
+
+        from datetime import datetime
+        time_label.config(text=f"Last update: {format_time(datetime.now())}")
+
+
+    # ─── View Saved Articles ─────────────────────────────────────────
+    def view_saved():
+        for widget in news_frame.winfo_children():
+            widget.destroy()
+
+        for title, link, source in saved_articles:
+            row = tk.Frame(news_frame, bg=current_colors["bg"])
+            row.pack(fill="x", padx=8, pady=(6, 2))
+
+            link_label = tk.Label(
+                row,
+                text="- " + title,
+                fg=current_colors["link"],
+                bg=current_colors["bg"],
+                cursor="hand2",
+                wraplength=250,
+                justify="left",
+                font=("Arial", 10, "bold")
+            )
+            link_label.bind(
+                "<Button-1>",
+                lambda e, url=link: __import__("webbrowser").open(url)
+            )
+            link_label.pack(side="left", fill="x", expand=True)
+
+            source_label = tk.Label(
+                news_frame,
+                text=f"({source})",
+                fg=current_colors["fg"],
+                bg=current_colors["bg"],
+                font=("Arial", 8, "italic")
+            )
+            source_label.pack(anchor="w", padx=25)
+
+        time_label.config(text="Viewing saved articles")
+
+    # ─── GUI Controls ───────────────────────────────────────────────
+    button_frame = tk.Frame(window, bg=current_colors["bg"])
+    button_frame.pack(pady=(10, 5))
+    tk.Button(button_frame, text="Toggle Dark Mode", command=toggle_theme).pack(side="left", padx=5)
+    tk.Button(button_frame, text="View Saved Articles", command=view_saved).pack(side="left", padx=5)
+
+    # ─── Weather Display ────────────────────────────────────────────
+    weather_label = tk.Label(
+        window,
+        text="Current Weather: Loading…",
+        font=("Arial", 10),
+        bg=current_colors["bg"],
+        fg=current_colors["fg"]
+    )
+    weather_label.pack(pady=(5, 2))
+
+    weather_icon_label = tk.Label(window, bg=current_colors["bg"])
+    weather_icon_label.pack(pady=(0, 5))
+
+    def update_weather():
+        data = get_current_weather("New York")  # or your default city
+        if data:
+            weather_label.config(
+                text=f"Current Weather: {data['city']}: {data['temp']}°F, {data['condition']}"
+            )
+            icon_code = data.get("icon")
+            if icon_code:
+                try:
+                    resp = requests.get(
+                        f"https://openweathermap.org/img/wn/{icon_code}@2x.png"
+                    )
+                    img = Image.open(io.BytesIO(resp.content)).resize((32, 32))
+                    tk_img = ImageTk.PhotoImage(img)
+                    weather_icon_label.config(image=tk_img)
+                    weather_icon_label.image = tk_img  # keep reference
+                except Exception as e:
+                    print("Failed to load weather icon:", e)
+        else:
+            weather_label.config(text="Current Weather: data unavailable")
+
+        window.after(600_000, update_weather)  # refresh in 10 min
+
+    update_weather()
+
+    # ─── News List ───────────────────────────────────────────────────
+    time_label = tk.Label(
+        window,
+        text="",
+        font=("Arial", 10),
+        bg=current_colors["bg"],
+        fg=current_colors["fg"]
+    )
+    time_label.pack()
+
+    canvas = tk.Canvas(window, bg=current_colors["bg"])
+    scrollbar = tk.Scrollbar(window, orient="vertical", command=canvas.yview)
+    news_frame = tk.Frame(canvas, bg=current_colors["bg"])
+
+    news_frame.bind(
         "<Configure>",
         lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
     )
-
-    canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
+    canvas.create_window((0, 0), window=news_frame, anchor="nw")
     canvas.configure(yscrollcommand=scrollbar.set)
 
-    def _on_mousewheel(event):
-        canvas.yview_scroll(int(-1*(event.delta/120)), "units")
-
-    canvas.bind_all("<MouseWheel>", _on_mousewheel)
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
 
-    def display_articles(articles):
-        for widget in scroll_frame.winfo_children():
-            widget.destroy()
+    canvas.bind_all(
+        "<MouseWheel>",
+        lambda event: canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+    )
 
-        for title, link, source in articles:
-            frame = ttk.Frame(scroll_frame)
-            frame.pack(fill="x", pady=5, padx=5)
+    refresh_articles()
 
-            star_symbol = "⭐" if is_saved(title, link, source) else "☆"
-            star = ttk.Button(frame, text=star_symbol, width=2,
-                              command=lambda t=title, l=link, s=source: (toggle_save(t, l, s), display_articles(get_articles_func() if not view_saved[0] else saved_articles)))
-            star.pack(side="right", padx=5)
-
-            label = ttk.Label(frame, text=title, cursor="hand2", wraplength=220, justify="left")
-            label.pack(side="left", fill="x", expand=True)
-            label.bind("<Button-1>", lambda e, url=link: webbrowser.open(url))
-
-            source_label = ttk.Label(scroll_frame, text=f"({source})", font=("Arial", 8, "italic"))
-            source_label.pack(anchor="w", padx=25)
-
-    return {
-        "dark_button": dark_button,
-        "view_button": view_button,
-        "time_label": time_label,
-        "display_articles": display_articles,
-        "view_saved": view_saved
-    }
-
-
+if __name__ == "__main__":
+    root = tk.Tk()
+    saved = load_saved_articles()
+    build_gui(root, saved)
+    root.mainloop()
