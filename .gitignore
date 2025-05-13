@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.so
+
+# VS Code
+.vscode/
+
+# Virtual environments
+.venv/
+env/
+
+# Packaging
+*.spec
+dist/
+build/
+
+# Misc
+*.zip
