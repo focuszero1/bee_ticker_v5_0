@@ -1,7 +1,9 @@
-# app_shell.py - Bee Ticker v5.4 clean window shell
+# app_shell.py - Bee Ticker v5.4.1 polished window shell
 
 import tkinter as tk
 from tkinter import ttk
+from datetime import datetime
+from themes import apply_light_mode, apply_dark_mode
 
 class BeeTickerApp(tk.Tk):
     def __init__(self):
@@ -11,35 +13,55 @@ class BeeTickerApp(tk.Tk):
         self.minsize(220, 400)
 
         self.style = ttk.Style()
+        self.current_theme = "light"
 
         # Create main layout shell
         self.create_shell()
 
+        # Start clock
+        self.update_clock()
+
     def create_shell(self):
         # --- Top bar (buttons, controls) ---
         self.top_bar = ttk.Frame(self)
-        self.top_bar.pack(side="top", fill="x")
+        self.top_bar.pack(side="top", fill="x", pady=2)
 
-        # --- Status bar (weather info, etc.) ---
+        # Add theme toggle button to top bar
+        theme_button = ttk.Button(self.top_bar, text="Toggle Theme", command=self.toggle_theme)
+        theme_button.pack(side="right", padx=5)
+
+        # --- Status bar (weather info, clock) ---
         self.status_bar = ttk.Frame(self)
-        self.status_bar.pack(side="top", fill="x")
+        self.status_bar.pack(side="top", fill="x", pady=2)
+
+        # Add clock to status bar
+        self.clock_label = ttk.Label(self.status_bar, text="")
+        self.clock_label.pack(side="right", padx=5)
 
         # --- Main content area (feeds, saved articles) ---
         self.content_area = ttk.Frame(self)
-        self.content_area.pack(fill="both", expand=True)
+        self.content_area.pack(fill="both", expand=True, padx=5, pady=5)
 
-        # --- Bottom bar (optional future use) ---
+        # --- Bottom bar (reserved for future use) ---
         self.bottom_bar = ttk.Frame(self)
-        self.bottom_bar.pack(side="bottom", fill="x")
+        self.bottom_bar.pack(side="bottom", fill="x", pady=2)
 
-        # Optional placeholder labels (remove later if you want)
-        ttk.Label(self.top_bar, text="Top Bar").pack(padx=10, pady=5)
-        ttk.Label(self.status_bar, text="Status/Weather Bar").pack(padx=10, pady=5)
-        ttk.Label(self.content_area, text="Main Content Area").pack(padx=10, pady=30)
-        ttk.Label(self.bottom_bar, text="Bottom Bar").pack(padx=10, pady=5)
+    # --- Theme toggle ---
+    def toggle_theme(self):
+        if self.current_theme == "light":
+            apply_dark_mode(self.style)
+            self.current_theme = "dark"
+        else:
+            apply_light_mode(self.style)
+            self.current_theme = "light"
+
+    # --- Clock updater ---
+    def update_clock(self):
+        now = datetime.now().strftime("%I:%M:%S %p")
+        self.clock_label.config(text=now)
+        self.after(1000, self.update_clock)
 
     # --- Module attachment API ---
-
     def attach_top_bar(self, widget):
         widget.pack(in_=self.top_bar, side="left", padx=5)
 

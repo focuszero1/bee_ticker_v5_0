@@ -54,3 +54,57 @@ bee_ticker_v5_0/
 This project is fully structured and safe to continue scaling.  
 This file remains the primary "resync document" for project continuation.  
 Assistant understands project state as of v5.4 snapshot (shell + feeds working).
+
+Bee Ticker v5.4.1 Pre-Polish Functional Snapshot
+Date: 2025-05-14
+
+Major Work Completed:
+app_shell.py fully rewritten:
+
+Removed placeholder labels
+
+Added Theme toggle button
+
+Added persistent clock
+
+Polished main window shell structure
+
+feeds.py fully rewritten:
+
+Mousewheel scrolling fixed
+
+Padding + fonts improved
+
+Feed articles display fully functional
+
+Star toggle behavior works properly
+
+storage.py polished:
+
+Type hints + docstrings added
+
+Safer file read/write handling
+
+Human-readable saved JSON
+
+weather.py polished:
+
+Safer request handling with timeout
+
+Type hints + docstrings added
+
+Full compatibility with config.json
+
+Ready for shell integration
+
+Current App State:
+Fully functional prototype
+
+All core modules cleaned + modernized
+
+Small visual polish bugs remain for later (logged separately)
+
+Next Planned Step:
+Minor polish pass for themes.py
+
+Begin v5.4.2 optional refinements
