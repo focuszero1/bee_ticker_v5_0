@@ -109,3 +109,58 @@ v5.5 candidate 2 experimental:
 - View Saved button and swap_content() test added.
 - Saved articles display raw URLs only → not suitable for stable yet.
 - Revert or rebuild saved_articles to match feeds/star system properly for candidate 3.
+
+## v5.6 Rebuild Plan (clean baseline)
+
+**Date:** 2025-05-14
+
+### Purpose
+
+Stabilize core app after experimental v5.5.1.1 failure.
+Remove unstable features and rebuild clean off `snapshot-v5.3`.
+Focus is on functionality, not appearance polish.
+
+### Rebuild Goals
+
+* **Lock window size**
+
+  * Hard-code fixed size (ex: 320x600 or 400x600)
+  * Add `self.resizable(False, False)` in BeeTickerApp
+  * Prevent resizing to eliminate floating button issues
+
+* **Scrap dark mode / theme toggle**
+
+  * Remove `themes.py` entirely
+  * Remove `Toggle Theme` button
+  * Set static neutral color scheme (ex: light grey or white background, black text)
+
+* **Fix swap system**
+
+  * Ensure `app.swap_content()` forcibly clears `content_area`
+  * Ensure `create_feed_frame()` and `create_saved_frame()` return frames only
+  * No more packing directly to `app`
+
+* **Fix saved articles storage**
+
+  * Redesign `storage.py` to store `(title, link, source)` tuple sets
+  * Rewrite Saved Articles display to match main feed style
+  * Eliminate raw URL display problem
+
+* **Eliminate floating layouts**
+
+  * Simplify all frame + button layouts
+  * Avoid scrollable canvas inside Saved Articles
+  * List saved articles as fixed cards just like feeds
+
+* **Keep feeds + saved views only**
+
+  * Do not add any experimental modules
+  * `main.py` should attach Feeds by default with Saved button in top bar
+
+* **Tag v5.6-dev only when stable**
+
+  * This will become new clean baseline for all future feature work
+
+### Outcome
+
+v5.6 will restore stability and modularity, acting as the **new clean base milestone** for future features.
