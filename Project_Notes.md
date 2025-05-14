@@ -104,3 +104,8 @@ bee_ticker_v5_0/
 - Log polish bugs into v5.5 bugs list
 - Optionally add Saved Articles view
 - Tweak padding, font sizing, margins in next pass
+
+v5.5 candidate 2 experimental:
+- View Saved button and swap_content() test added.
+- Saved articles display raw URLs only → not suitable for stable yet.
+- Revert or rebuild saved_articles to match feeds/star system properly for candidate 3.

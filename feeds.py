@@ -1,10 +1,10 @@
-# feeds.py - Bee Ticker v5.5 candidate polished feeds module
+# feeds.py - Bee Ticker v5.5.1.1 feeds + saved view module
 
 import tkinter as tk
 from tkinter import ttk
 import webbrowser
 from utils import format_time
-from storage import is_saved, toggle_save
+from storage import is_saved, toggle_save, saved_articles
 import feedparser
 
 FEEDS = {
@@ -35,9 +35,7 @@ def create_feed_frame(app):
 
     scrollable_frame.bind(
         "<Configure>",
-        lambda e: canvas.configure(
-            scrollregion=canvas.bbox("all")
-        )
+        lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
     )
 
     canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
@@ -46,13 +44,10 @@ def create_feed_frame(app):
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
 
-    # Mousewheel scroll support
     def _on_mousewheel(event):
         canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
-
     scrollable_frame.bind_all("<MouseWheel>", _on_mousewheel)
 
-    # Populate articles
     articles = get_articles()
     for article in articles:
         article_frame = ttk.Frame(scrollable_frame, padding=8, relief="groove", borderwidth=2)
@@ -63,7 +58,6 @@ def create_feed_frame(app):
         published = article["published"]
         source = article["source"]
 
-        # Headline link label
         link_label = ttk.Label(
             article_frame,
             text=title,
@@ -75,25 +69,15 @@ def create_feed_frame(app):
         link_label.pack(side="top", anchor="w", fill="x", pady=2)
         link_label.bind("<Button-1>", lambda e, url=link: webbrowser.open_new(url))
 
-        # Article source + published date
         info_frame = ttk.Frame(article_frame)
         info_frame.pack(side="top", fill="x", pady=2)
 
-        source_label = ttk.Label(
-            info_frame,
-            text=f"{source}",
-            font=("Arial", 8, "italic")
-        )
+        source_label = ttk.Label(info_frame, text=source, font=("Arial", 8, "italic"))
         source_label.pack(side="left")
 
-        published_label = ttk.Label(
-            info_frame,
-            text=format_time(published),
-            font=("Arial", 8)
-        )
+        published_label = ttk.Label(info_frame, text=format_time(published), font=("Arial", 8))
         published_label.pack(side="left", padx=10)
 
-        # Star button to far right
         star_btn = ttk.Button(info_frame, text="★" if is_saved(link) else "☆", width=2)
         star_btn.config(command=lambda url=link, btn=star_btn: toggle_star(url, btn))
         star_btn.pack(side="right")
@@ -103,3 +87,54 @@ def create_feed_frame(app):
 def toggle_star(url, btn):
     toggle_save(url)
     btn.config(text="★" if is_saved(url) else "☆")
+
+def create_saved_frame(app):
+    frame = ttk.Frame(app)
+
+    # Back button at the top
+    back_button = ttk.Button(
+        frame,
+        text="Back to Feeds",
+        command=lambda: app.swap_content(create_feed_frame(app))
+    )
+    back_button.pack(side="top", pady=5)
+
+    canvas = tk.Canvas(frame, borderwidth=0)
+    scrollbar = ttk.Scrollbar(frame, orient="vertical", command=canvas.yview)
+    scrollable_frame = ttk.Frame(canvas)
+
+    scrollable_frame.bind(
+        "<Configure>",
+        lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+    )
+
+    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
+
+    def _on_mousewheel(event):
+        canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+    scrollable_frame.bind_all("<MouseWheel>", _on_mousewheel)
+
+    if not saved_articles:
+        empty_label = ttk.Label(scrollable_frame, text="No saved articles.", font=("Arial", 10))
+        empty_label.pack(pady=20)
+    else:
+        for url in saved_articles:
+            article_frame = ttk.Frame(scrollable_frame, padding=8, relief="groove", borderwidth=2)
+            article_frame.pack(fill="x", padx=5, pady=5)
+
+            link_label = ttk.Label(
+                article_frame,
+                text=url,
+                cursor="hand2",
+                wraplength=220,
+                justify="left",
+                font=("Arial", 10, "bold")
+            )
+            link_label.pack(side="top", anchor="w", fill="x", pady=2)
+            link_label.bind("<Button-1>", lambda e, link=url: webbrowser.open_new(link))
+
+    return frame

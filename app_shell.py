@@ -1,4 +1,4 @@
-# app_shell.py - Bee Ticker v5.4.1 polished window shell
+# app_shell.py - Bee Ticker v5.4.1 + swap_content added for v5.5 modules
 
 import tkinter as tk
 from tkinter import ttk
@@ -26,7 +26,6 @@ class BeeTickerApp(tk.Tk):
         self.top_bar = ttk.Frame(self)
         self.top_bar.pack(side="top", fill="x", pady=2)
 
-        # Add theme toggle button to top bar
         theme_button = ttk.Button(self.top_bar, text="Toggle Theme", command=self.toggle_theme)
         theme_button.pack(side="right", padx=5)
 
@@ -34,7 +33,6 @@ class BeeTickerApp(tk.Tk):
         self.status_bar = ttk.Frame(self)
         self.status_bar.pack(side="top", fill="x", pady=2)
 
-        # Add clock to status bar
         self.clock_label = ttk.Label(self.status_bar, text="")
         self.clock_label.pack(side="right", padx=5)
 
@@ -73,6 +71,13 @@ class BeeTickerApp(tk.Tk):
 
     def attach_bottom_bar(self, widget):
         widget.pack(in_=self.bottom_bar, side="left", padx=5)
+
+    # --- v5.5 ADDITION: content swapper ---
+    def swap_content(self, new_frame):
+        """Replace content area with a new frame."""
+        for widget in self.content_area.winfo_children():
+            widget.destroy()
+        new_frame.pack(in_=self.content_area, fill="both", expand=True)
 
 if __name__ == "__main__":
     app = BeeTickerApp()
