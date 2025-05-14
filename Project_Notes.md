@@ -5,133 +5,102 @@ Modular beekeeping news + weather desktop app
 Python + tkinter + ttk + feedparser + OpenWeatherMap API
 
 ## Current Version
-**v5.4**  
-Date: 2025-05-13  
-Status: Shell + feeds working (needs visual cleanup)
+**v5.5 candidate 1**  
+Date: 2025-05-14  
+Status: All modules polished, feeds fully functional, GUI cleanup phase started.
 
 ## Folder Structure
 bee_ticker_v5_0/
 ├── app_shell.py → BeeTickerApp window shell
 ├── main.py → launcher only
-├── feeds.py → scrollable news headlines (attached)
-├── weather.py → (pending reconnect)
+├── feeds.py → scrollable news headlines
+├── weather.py → weather data fetcher
 ├── storage.py → saved article persistence
-├── themes.py → (currently shelved)
+├── themes.py → color + style themes
 ├── utils.py → helper functions (format_time)
 ├── config.json → externalized API key storage
 ├── saved_articles.json → persistent saved articles
-├── .git/ → local Git repository fully initialized
-├── .vscode/ → VS Code local virtual environment stability settings
+├── .git/ → local Git repository
+├── .vscode/ → VS Code local settings
+
 
 ## Current Features
 - Modular architecture complete
 - App runs via BeeTickerApp shell class
 - Fully functional news feed pull + display
 - Clickable article links open in browser
-- Project structured for clean module attachments
+- Theme toggle (light/dark mode)
+- Persistent saved articles system
+- Clean modular project structure
 
 ## Known Stable Milestones
-- v5.0 → Single file → full modular conversion
-- v5.1 → Weather API externalized to config.json
-- v5.2 → Weather + news integrated GUI
-- v5.3 → Canvas + ttk hybrid GUI, persistent saved_articles system finalized
-- v5.4 → Shell refactor milestone + feeds module attached
-    - App refactored into BeeTickerApp shell class
-    - main.py converted to launcher only
-    - feeds module fully rewired into shell (create_feed_frame)
-    - news headlines display working with live data pull
-    - star toggle, scroll area, and visual layout remain incomplete for next phase
+- **v5.0** → Single file → full modular conversion
+- **v5.1** → Weather API externalized to config.json
+- **v5.2** → Weather + news integrated GUI
+- **v5.3** → Canvas + ttk hybrid GUI, saved_articles system finalized
+- **v5.4** → Shell refactor + feeds module attached
+- **v5.4.1** → Pre-polish stable pass
+- **v5.5 candidate 1** → Major GUI improvement pass
 
-## Next Planned Work (future versions)
-- v5.4.1 → Feeds polish (scroll fix, star button restore, remove placeholder labels)
-- v5.5 → Add editable multi-RSS feed manager
-- v5.6 → Add saved article export feature
-- v5.7 → Add notification alerts for keyword matches
-- v5.8 → Move RSS URLs to editable config file
-- v6.0 → Consider plugin-based modular expansion (if app grows much larger)
+## v5.4.1 Pre-Polish Functional Snapshot
+**Date:** 2025-05-14
 
-## Notes
-This project is fully structured and safe to continue scaling.  
-This file remains the primary "resync document" for project continuation.  
-Assistant understands project state as of v5.4 snapshot (shell + feeds working).
+### Major Work Completed
+**app_shell.py**
+- Removed placeholder labels
+- Added Theme toggle button
+- Added persistent clock
+- Polished main window shell structure
 
-Bee Ticker v5.4.1 Pre-Polish Functional Snapshot
-Date: 2025-05-14
+**feeds.py**
+- Mousewheel scrolling fixed
+- Padding + fonts improved
+- Feed articles display fully functional
+- Star toggle behavior working properly
 
-Major Work Completed:
-app_shell.py fully rewritten:
+**storage.py**
+- Type hints + docstrings added
+- Safer file read/write handling
+- Human-readable saved JSON
 
-Removed placeholder labels
+**weather.py**
+- Safer request handling with timeout
+- Type hints + docstrings added
+- Full compatibility with config.json
+- Ready for shell integration
 
-Added Theme toggle button
+### Current App State
+- Fully functional prototype
+- All core modules cleaned + modernized
+- Small visual polish bugs remain for later
 
-Added persistent clock
+### Next Planned Step
+- Minor polish pass for themes.py
+- Begin optional v5.4.2 refinements
 
-Polished main window shell structure
+## v5.5 Candidate 1 Snapshot
+**Date:** 2025-05-14
 
-feeds.py fully rewritten:
-Mousewheel scrolling fixed
-Padding + fonts improved
-Feed articles display fully functional
-Star toggle behavior works properly
-s
-torage.py polished:
-Type hints + docstrings added
-Safer file read/write handling
-Human-readable saved JSON
+### Major Work Completed
+**feeds.py**
+- Rebuilt for v5.5 candidate
+- Added card-style borders + padding around articles
+- Improved article label wrapping & fonts
+- Fixed star button alignment
+- Mousewheel scrolling fully stable
+- Feeds display looks polished and professional
 
-weather.py polished:
-Safer request handling with timeout
-Type hints + docstrings added
-Full compatibility with config.json
-Ready for shell integration
+**Overall**
+- Theme toggle + live clock continue working as expected
+- Resizing + scroll behavior stable
+- Dark mode works without issue
+- No functional bugs; only minor visual polish ideas remain
 
-Current App State:
-Fully functional prototype
-All core modules cleaned + modernized
-Small visual polish bugs remain for later (logged separately)
+### Status
+- Marked as v5.5 candidate 1 internal stable checkpoint
+- Ready to branch into next GUI refinement passes
 
-Next Planned Step:
-Minor polish pass for themes.py
-Begin v5.4.2 optional refinements
-
-Bee Ticker v5.5 Candidate 1 Snapshot
-Date: 2025-05-14
-
-Major Work Completed:
-feeds.py completely rebuilt for v5.5 candidate
-
-Added card-style borders + padding around articles
-
-Improved article label wrapping & fonts
-
-Fixed star button alignment + consistent positioning
-
-Mousewheel scrolling works across platforms
-
-Theme toggle + live clock continue working as expected
-
-Feeds display feels clean, functional, and professional for the first time
-
-Initial Testing Results:
-Resizing works correctly
-
-Scroll behavior stable
-
-Dark mode works
-
-No functional bugs observed
-
-Minor low-priority visual polish bugs noted for future fix list
-
-Status:
-Marking this as v5.5 candidate 1 internal stable checkpoint
-
-Ready to branch into next GUI refinement passes when desired
-
-Next Steps:
-Log minor polish bugs into v5.5 bugs list
-
-Optionally add Saved Articles view
-
-Tweak padding, font sizing, and margins further in next pass
+### Next Steps
+- Log polish bugs into v5.5 bugs list
+- Optionally add Saved Articles view
+- Tweak padding, font sizing, margins in next pass
