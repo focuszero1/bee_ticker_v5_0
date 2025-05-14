@@ -70,41 +70,68 @@ Added persistent clock
 Polished main window shell structure
 
 feeds.py fully rewritten:
-
 Mousewheel scrolling fixed
-
 Padding + fonts improved
-
 Feed articles display fully functional
-
 Star toggle behavior works properly
-
-storage.py polished:
-
+s
+torage.py polished:
 Type hints + docstrings added
-
 Safer file read/write handling
-
 Human-readable saved JSON
 
 weather.py polished:
-
 Safer request handling with timeout
-
 Type hints + docstrings added
-
 Full compatibility with config.json
-
 Ready for shell integration
 
 Current App State:
 Fully functional prototype
-
 All core modules cleaned + modernized
-
 Small visual polish bugs remain for later (logged separately)
 
 Next Planned Step:
 Minor polish pass for themes.py
-
 Begin v5.4.2 optional refinements
+
+Bee Ticker v5.5 Candidate 1 Snapshot
+Date: 2025-05-14
+
+Major Work Completed:
+feeds.py completely rebuilt for v5.5 candidate
+
+Added card-style borders + padding around articles
+
+Improved article label wrapping & fonts
+
+Fixed star button alignment + consistent positioning
+
+Mousewheel scrolling works across platforms
+
+Theme toggle + live clock continue working as expected
+
+Feeds display feels clean, functional, and professional for the first time
+
+Initial Testing Results:
+Resizing works correctly
+
+Scroll behavior stable
+
+Dark mode works
+
+No functional bugs observed
+
+Minor low-priority visual polish bugs noted for future fix list
+
+Status:
+Marking this as v5.5 candidate 1 internal stable checkpoint
+
+Ready to branch into next GUI refinement passes when desired
+
+Next Steps:
+Log minor polish bugs into v5.5 bugs list
+
+Optionally add Saved Articles view
+
+Tweak padding, font sizing, and margins further in next pass
