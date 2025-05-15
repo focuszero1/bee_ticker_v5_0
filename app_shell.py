@@ -14,12 +14,16 @@ class BeeTickerApp(tk.Tk):
 
         self.style = ttk.Style()
         self.current_theme = "light"
+        self.current_frame = None
 
         # Create main layout shell
         self.create_shell()
 
         # Start clock
         self.update_clock()
+
+        # Initialize with a default frame
+        self.swap_content(self.create_feed_frame())
 
     def create_shell(self):
         # --- Top bar (buttons, controls) ---
@@ -75,9 +79,16 @@ class BeeTickerApp(tk.Tk):
     # --- v5.5 ADDITION: content swapper ---
     def swap_content(self, new_frame):
         """Replace content area with a new frame."""
-        for widget in self.content_area.winfo_children():
-            widget.destroy()
-        new_frame.pack(in_=self.content_area, fill="both", expand=True)
+        if self.current_frame is not None:
+            self.current_frame.destroy()
+        self.current_frame = new_frame
+        self.current_frame.pack(in_=self.content_area, fill="both", expand=True)  # <-- pack into content_area
+
+    def create_feed_frame(self):
+        """Create a default feed frame."""
+        frame = ttk.Frame(self.content_area)
+        # Add widgets to the frame as needed
+        return frame
 
 if __name__ == "__main__":
     app = BeeTickerApp()

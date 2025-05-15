@@ -27,7 +27,7 @@ def get_articles():
     return articles
 
 def create_feed_frame(app):
-    frame = ttk.Frame(app)
+    frame = ttk.Frame(app.content_area)  # Use content_area as parent
 
     canvas = tk.Canvas(frame, borderwidth=0)
     scrollbar = ttk.Scrollbar(frame, orient="vertical", command=canvas.yview)
@@ -78,18 +78,22 @@ def create_feed_frame(app):
         published_label = ttk.Label(info_frame, text=format_time(published), font=("Arial", 8))
         published_label.pack(side="left", padx=10)
 
-        star_btn = ttk.Button(info_frame, text="★" if is_saved(link) else "☆", width=2)
-        star_btn.config(command=lambda url=link, btn=star_btn: toggle_star(url, btn))
+        star_btn = ttk.Button(
+            info_frame,
+            text="★" if is_saved(title, link, source) else "☆",
+            width=2
+        )
+        star_btn.config(command=lambda t=title, l=link, s=source, btn=star_btn: toggle_star(t, l, s, btn))
         star_btn.pack(side="right")
 
     return frame
 
-def toggle_star(url, btn):
-    toggle_save(url)
-    btn.config(text="★" if is_saved(url) else "☆")
+def toggle_star(title, link, source, btn):
+    toggle_save(title, link, source)
+    btn.config(text="★" if is_saved(title, link, source) else "☆")
 
 def create_saved_frame(app):
-    frame = ttk.Frame(app)
+    frame = ttk.Frame(app.content_area)  # Use content_area as parent
 
     # Back button at the top
     back_button = ttk.Button(
@@ -122,19 +126,22 @@ def create_saved_frame(app):
         empty_label = ttk.Label(scrollable_frame, text="No saved articles.", font=("Arial", 10))
         empty_label.pack(pady=20)
     else:
-        for url in saved_articles:
+        for title, link, source in saved_articles:
             article_frame = ttk.Frame(scrollable_frame, padding=8, relief="groove", borderwidth=2)
             article_frame.pack(fill="x", padx=5, pady=5)
 
             link_label = ttk.Label(
                 article_frame,
-                text=url,
+                text=title,
                 cursor="hand2",
                 wraplength=220,
                 justify="left",
                 font=("Arial", 10, "bold")
             )
             link_label.pack(side="top", anchor="w", fill="x", pady=2)
-            link_label.bind("<Button-1>", lambda e, link=url: webbrowser.open_new(link))
+            link_label.bind("<Button-1>", lambda e, url=link: webbrowser.open_new(url))
+
+            source_label = ttk.Label(article_frame, text=source, font=("Arial", 8, "italic"))
+            source_label.pack(side="left")
 
     return frame
