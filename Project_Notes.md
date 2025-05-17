@@ -164,3 +164,51 @@ Focus is on functionality, not appearance polish.
 ### Outcome
 
 v5.6 will restore stability and modularity, acting as the **new clean base milestone** for future features.
+
+v5.5.2 (2025-05-15)
+- Fixed saved articles displaying as URLs; now styled with title and source.
+- Fixed 'Back to Feeds' navigation from Saved view.
+- All user-facing bugs from v5.5 candidate 1 resolved.
+
+from datetime import datetime
+from pathlib import Path
+
+# Define the snapshot text for Project_Notes.md
+snapshot = f"""
+## v5.6 Stable Baseline
+**Date:** {datetime.today().strftime("%Y-%m-%d")}
+
+### Overview
+This version marks the first stable post-canvas rewrite baseline.
+
+### Key Features
+- Canvas removed from feeds and saved views
+- No more mousewheel bindings or scroll glitches
+- Theme toggle and clock functioning
+- Article cards display cleanly with title, source, and star toggle
+- All modules load without error
+
+### Known Tradeoffs
+- No saved articles view
+- No scrolling or pagination (only visible articles shown)
+- Minimal theming polish
+
+### Next Potential Steps
+- Add Refresh button
+- Pagination for article sets
+- Visual theme polish
+- Pi Mini Mode (auto-launch, touch optimizations)
+
+### Status
+This version is clean, stable, and suitable as a base for all future development.
+"""
+
+# Path to update the file
+notes_path = Path("/mnt/data/Project_Notes.md")
+
+# Append the snapshot to the file
+with open(notes_path, "a", encoding="utf-8") as f:
+    f.write("\n" + snapshot.strip() + "\n")
+
+# Return path for push reference
+notes_path.name
