@@ -1,4 +1,4 @@
-# Bee Ticker: Pi Mini App Edition
+# Bee Ticker: Windows Edition
 
 **Version:** v5.6  
 **Platform:** Widnows (Tkinter GUI, ttkbootstrap)  
