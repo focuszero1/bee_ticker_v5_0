@@ -212,3 +212,25 @@ with open(notes_path, "a", encoding="utf-8") as f:
 
 # Return path for push reference
 notes_path.name
+
+## v5.6 Final Release
+**Date:** 2025-05-19
+
+### Key Features
+- Clean architecture from v5.3 snapshot forward
+- Feeds pull and render reliably using card-style layout
+- Star toggle system works with local save and Discord integration
+- Theme toggle and clock functional and stable
+- Weather module fully functional via OpenWeatherMap API
+- Mousewheel scrolling removed for stable sizing
+- Local saving preserved but no saved view required
+
+### Discord Integration
+- New feature: star an article → instantly sent to Discord via webhook
+- Can be enabled/disabled via `config.json`
+- Replaces in-app saved article view and simplifies user flow
+
+### Status
+- All modules tested and functioning
+- No known UI or performance bugs
+- Ready for public/stable use as v5.6

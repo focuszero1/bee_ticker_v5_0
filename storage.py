@@ -1,7 +1,8 @@
-# storage.py - Bee Ticker v5.4.1 polished storage module
+# storage.py - Bee Ticker v5.5.2 with Discord integration
 
 import json
 import os
+import requests
 from typing import List, Tuple
 
 DATA_FILE = "saved_articles.json"
@@ -14,7 +15,6 @@ def load_saved_articles() -> None:
         try:
             with open(DATA_FILE, "r", encoding="utf-8") as f:
                 articles = json.load(f)
-                # Ensure each article is a tuple
                 saved_articles = [tuple(article) for article in articles]
         except (json.JSONDecodeError, IOError):
             saved_articles = []
@@ -29,6 +29,23 @@ def save_saved_articles() -> None:
     except IOError:
         print("Error: Could not save articles to file.")
 
+def send_to_discord(title: str, link: str, source: str) -> None:
+    """Send a starred article to a Discord channel via webhook."""
+    try:
+        config_path = os.path.join(os.path.dirname(__file__), "config.json")
+        with open(config_path, "r", encoding="utf-8") as f:
+            config = json.load(f)
+        webhook_url = config.get("DISCORD_WEBHOOK_URL")
+        if not webhook_url:
+            return  # No webhook configured
+
+        payload = {
+            "content": f"⭐ **New Saved Article:**\n**{title}** — *{source}*\n{link}"
+        }
+        requests.post(webhook_url, json=payload, timeout=3)
+    except Exception as e:
+        print("Failed to send to Discord:", e)
+
 def toggle_save(title: str, link: str, source: str) -> None:
     """Toggle an article between saved and unsaved."""
     article = (title, link, source)
@@ -36,11 +53,11 @@ def toggle_save(title: str, link: str, source: str) -> None:
         saved_articles.remove(article)
     else:
         saved_articles.append(article)
+        send_to_discord(title, link, source)
     save_saved_articles()
 
 def is_saved(title: str, link: str, source: str) -> bool:
     """Check if an article is currently saved."""
     return (title, link, source) in saved_articles
 
-# Load articles immediately when module is imported
 load_saved_articles()
