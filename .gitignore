@@ -1,19 +1,29 @@
-# Python cache
+# Configurations with sensitive data
+config.json
+
+# Python cache files
 __pycache__/
 *.py[cod]
-*.so
+*$py.class
 
-# VS Code
-.vscode/
-
-# Virtual environments
-.venv/
-env/
-
-# Packaging
-*.spec
+# Distribution / packaging
 dist/
 build/
+*.egg-info/
 
-# Misc
-*.zip
+# Local development settings
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS specific files
+.DS_Store
+Thumbs.db
