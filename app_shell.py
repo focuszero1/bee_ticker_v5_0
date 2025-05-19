@@ -4,6 +4,7 @@ from ttkbootstrap import Window, Style, ttk
 from ttkbootstrap.constants import *
 from datetime import datetime
 from themes import apply_light_mode, apply_dark_mode
+from weather import get_current_weather
 
 class BeeTickerApp(Window):
     def __init__(self):
@@ -22,6 +23,9 @@ class BeeTickerApp(Window):
         # Start clock
         self.update_clock()
 
+        # Update weather
+        self.update_weather()  # <-- Add this line
+
         # Initialize with a default frame
         self.swap_content(self.create_feed_frame())
 
@@ -30,11 +34,12 @@ class BeeTickerApp(Window):
         self.top_bar = ttk.Frame(self)
         self.top_bar.pack(side="top", fill="x", pady=2)
 
-
-
         # --- Status bar (weather info, clock) ---
         self.status_bar = ttk.Frame(self)
         self.status_bar.pack(side="top", fill="x", pady=2)
+
+        self.weather_label = ttk.Label(self.status_bar, text="Loading weather...")
+        self.weather_label.pack(side="left", padx=5)
 
         self.clock_label = ttk.Label(self.status_bar, text="")
         self.clock_label.pack(side="right", padx=5)
@@ -61,6 +66,17 @@ class BeeTickerApp(Window):
         now = datetime.now().strftime("%I:%M:%S %p")
         self.clock_label.config(text=now)
         self.after(1000, self.update_clock)
+
+    # --- Weather updater ---
+    def update_weather(self):
+        weather = get_current_weather("New York City")
+        if weather:
+            self.weather_label.config(
+                text=f"{weather['city']}: {weather['temp']}°F, {weather['condition']}"
+            )
+        else:
+            self.weather_label.config(text="Weather unavailable")
+        self.after(1800000, self.update_weather)  # 30 minutes
 
     # --- Module attachment API ---
     def attach_top_bar(self, widget):
