@@ -5,17 +5,21 @@ import json
 import os
 from typing import Optional, Dict
 
-def load_api_key() -> str:
-    """Load the OpenWeatherMap API key from config.json."""
+def get_api_key() -> str:
+    """
+    Load the OpenWeatherMap API key from config.json.
+    Returns empty string if config is missing/invalid.
+    """
     config_path = os.path.join(os.path.dirname(__file__), "config.json")
     try:
         with open(config_path, "r", encoding="utf-8") as f:
             config = json.load(f)
-        return config["OPENWEATHER_API_KEY"]
+        return config.get("OPENWEATHER_API_KEY", "")
     except (FileNotFoundError, KeyError, json.JSONDecodeError):
-        raise ValueError("Missing or invalid API key in config.json.")
+        print("Warning: Config file missing or invalid. Weather features disabled.")
+        return ""
 
-API_KEY = load_api_key()
+API_KEY = get_api_key()
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 
 def get_current_weather(city: str) -> Optional[Dict[str, str]]:
@@ -24,6 +28,10 @@ def get_current_weather(city: str) -> Optional[Dict[str, str]]:
 
     Returns a dictionary with weather info or None if request fails.
     """
+    if not API_KEY:
+        print("No API key available. Weather data cannot be retrieved.")
+        return None
+        
     params = {
         "q": city,
         "appid": API_KEY,
