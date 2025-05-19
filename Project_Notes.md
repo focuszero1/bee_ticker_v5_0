@@ -234,3 +234,16 @@ notes_path.name
 - All modules tested and functioning
 - No known UI or performance bugs
 - Ready for public/stable use as v5.6
+
+## v5.6.1-bootstrap
+**Date:** 2025-05-19
+
+### Key Changes
+- Replaced base tkinter styling with ttkbootstrap
+- Set default theme to 'darkly'
+- Styled star buttons with `bootstyle="warning"` for high contrast
+- Removed theme toggle for cleaner interface
+- Feeds display now visually polished and compact
+
+### Status
+Visual milestone reached — ready for presentation or continued enhancements.

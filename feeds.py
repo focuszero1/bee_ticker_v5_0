@@ -12,6 +12,8 @@ FEEDS = {
     "American Bee Journal": "https://americanbeejournal.com/feed/"
 }
 
+ARTICLES_PER_PAGE = 4  # or whatever fits your layout
+
 def get_articles():
     articles = []
     for source, url in FEEDS.items():
@@ -25,16 +27,21 @@ def get_articles():
             })
     return articles
 
-def create_feed_frame(app):
+def create_feed_frame(app, page=0):
     frame = ttk.Frame(app.content_area)
 
     articles = get_articles()
-    if not articles:
+    total_pages = max(1, (len(articles) + ARTICLES_PER_PAGE - 1) // ARTICLES_PER_PAGE)
+    start = page * ARTICLES_PER_PAGE
+    end = start + ARTICLES_PER_PAGE
+    page_articles = articles[start:end]
+
+    if not page_articles:
         msg = ttk.Label(frame, text="No articles available.", font=("Arial", 10))
         msg.pack(pady=20)
         return frame
 
-    for article in articles:
+    for article in page_articles:
         title = article["title"]
         link = article["link"]
         published = article["published"]
@@ -71,6 +78,17 @@ def create_feed_frame(app):
         )
         star_btn.config(command=lambda t=title, l=link, s=source, btn=star_btn: toggle_star(t, l, s, btn))
         star_btn.pack(side="right")
+
+    # Pagination controls
+    nav_frame = ttk.Frame(frame)
+    nav_frame.pack(pady=10)
+
+    if page > 0:
+        prev_btn = ttk.Button(nav_frame, text="Previous", command=lambda: app.swap_content(create_feed_frame(app, page-1)))
+        prev_btn.pack(side="left", padx=5)
+    if end < len(articles):
+        next_btn = ttk.Button(nav_frame, text="Next", command=lambda: app.swap_content(create_feed_frame(app, page+1)))
+        next_btn.pack(side="right", padx=5)
 
     return frame
 
