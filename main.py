@@ -1,6 +1,5 @@
 # main.py - Bee Ticker v5.5.1.1 launcher
 
-from tkinter import ttk
 from app_shell import BeeTickerApp
 from feeds import create_feed_frame
 
@@ -9,7 +8,7 @@ def main():
 
     # Load initial feed frame
     feed_frame = create_feed_frame(app)
-    app.attach_content(feed_frame)
+    app.swap_content(feed_frame)
 
     app.mainloop()
 

@@ -1,7 +1,6 @@
 # feeds.py - Bee Ticker v5.6 clean architecture (no canvas, no mousewheel binding)
 
-import tkinter as tk
-from tkinter import ttk
+from ttkbootstrap import ttk
 import webbrowser
 from utils import format_time
 from storage import is_saved, toggle_save
@@ -67,7 +66,8 @@ def create_feed_frame(app):
         star_btn = ttk.Button(
             info_frame,
             text="★" if is_saved(title, link, source) else "☆",
-            width=2
+            width=2,
+            bootstyle="warning",
         )
         star_btn.config(command=lambda t=title, l=link, s=source, btn=star_btn: toggle_star(t, l, s, btn))
         star_btn.pack(side="right")

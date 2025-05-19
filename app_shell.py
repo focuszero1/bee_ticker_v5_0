@@ -1,18 +1,18 @@
 # app_shell.py - Bee Ticker v5.4.1 + swap_content added for v5.5 modules
 
-import tkinter as tk
-from tkinter import ttk
+from ttkbootstrap import Window, Style, ttk
+from ttkbootstrap.constants import *
 from datetime import datetime
 from themes import apply_light_mode, apply_dark_mode
 
-class BeeTickerApp(tk.Tk):
+class BeeTickerApp(Window):
     def __init__(self):
-        super().__init__()
+        super().__init__(themename="darkly")
         self.title("Bee News Ticker")
         self.geometry("320x600")
         self.minsize(220, 400)
 
-        self.style = ttk.Style()
+        self.style 
         self.current_theme = "light"
         self.current_frame = None
 
@@ -30,8 +30,7 @@ class BeeTickerApp(tk.Tk):
         self.top_bar = ttk.Frame(self)
         self.top_bar.pack(side="top", fill="x", pady=2)
 
-        theme_button = ttk.Button(self.top_bar, text="Toggle Theme", command=self.toggle_theme)
-        theme_button.pack(side="right", padx=5)
+
 
         # --- Status bar (weather info, clock) ---
         self.status_bar = ttk.Frame(self)
