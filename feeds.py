@@ -1,10 +1,19 @@
 # feeds.py - Bee Ticker v5.6 clean architecture (no canvas, no mousewheel binding)
 
+
 from ttkbootstrap import ttk
 import webbrowser
 from utils import format_time
 from storage import is_saved, toggle_save
 import feedparser
+
+# --- Font styles for consistency ---
+TITLE_FONT = ("Arial", 10, "bold")
+REGULAR_FONT = ("Arial", 10)
+ITALIC_FONT = ("Arial", 8, "italic")
+
+# --- Style for article frames and labels ---
+
 
 FEEDS = {
     "Google News": "https://news.google.com/rss/search?q=honeybee+OR+beekeeping&hl=en-US&gl=US&ceid=US:en",
@@ -37,7 +46,7 @@ def create_feed_frame(app, page=0):
     page_articles = articles[start:end]
 
     if not page_articles:
-        msg = ttk.Label(frame, text="No articles available.", font=("Arial", 10))
+        msg = ttk.Label(frame, text="No articles available.", font=REGULAR_FONT)
         msg.pack(pady=20)
         return frame
 
@@ -47,8 +56,14 @@ def create_feed_frame(app, page=0):
         published = article["published"]
         source = article["source"]
 
-        article_frame = ttk.Frame(frame, padding=8, relief="groove", borderwidth=2)
-        article_frame.pack(fill="x", padx=5, pady=5)
+        article_frame = ttk.Frame(
+            frame,
+            padding=10,
+            style="Article.TFrame",
+            relief="flat",
+            borderwidth=0
+        )
+        article_frame.pack(fill="x", padx=8, pady=8)
 
         link_label = ttk.Label(
             article_frame,
@@ -56,18 +71,19 @@ def create_feed_frame(app, page=0):
             cursor="hand2",
             wraplength=220,
             justify="left",
-            font=("Arial", 10, "bold")
+            font=TITLE_FONT,
+            style="Article.TLabel"
         )
-        link_label.pack(side="top", anchor="w", fill="x", pady=2)
+        link_label.pack(side="top", anchor="w", fill="x", pady=4)
         link_label.bind("<Button-1>", lambda e, url=link: webbrowser.open_new(url))
 
-        info_frame = ttk.Frame(article_frame)
+        info_frame = ttk.Frame(article_frame, style="Article.TFrame")
         info_frame.pack(side="top", fill="x", pady=2)
 
-        source_label = ttk.Label(info_frame, text=source, font=("Arial", 8, "italic"))
-        source_label.pack(side="left")
+        source_label = ttk.Label(info_frame, text=source, font=ITALIC_FONT, style="Article.TLabel")
+        source_label.pack(side="left", padx=4)
 
-        published_label = ttk.Label(info_frame, text=format_time(published), font=("Arial", 8))
+        published_label = ttk.Label(info_frame, text=format_time(published), font=REGULAR_FONT, style="Article.TLabel")
         published_label.pack(side="left", padx=10)
 
         star_btn = ttk.Button(
@@ -95,4 +111,9 @@ def create_feed_frame(app, page=0):
 def toggle_star(title, link, source, btn):
     toggle_save(title, link, source)
     btn.config(text="★" if is_saved(title, link, source) else "☆")
+
+def schedule_feed_refresh(app, interval=1800):
+    app.swap_content(create_feed_frame(app, page=0))
+    app.after(interval * 1000, lambda: schedule_feed_refresh(app, interval))
+# Call this once in your app init: schedule_feed_refresh(self)
 

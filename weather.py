@@ -41,15 +41,15 @@ def get_current_weather(city: str) -> Optional[Dict[str, str]]:
         response = requests.get(BASE_URL, params=params, timeout=5)
         response.raise_for_status()
         data = response.json()
-        weather_data = {
-            "city": data["name"],
-            "temp": data["main"]["temp"],
-            "condition": data["weather"][0]["description"].title(),
-            "humidity": data["main"]["humidity"],
-            "wind_speed": data["wind"]["speed"],
-            "icon": data["weather"][0]["icon"]
+        temp = data["main"]["temp"]
+        condition = data["weather"][0]["description"].title()
+        icon = data["weather"][0]["icon"]  # e.g., "01d"
+        return {
+            "city": city,
+            "temp": temp,
+            "condition": condition,
+            "icon": icon
         }
-        return weather_data
     except (requests.RequestException, KeyError) as e:
         print(f"Error fetching weather: {e}")
         return None
